@@ -11,43 +11,36 @@ namespace Queues
     {
 
         private static readonly Random random = new();
+        private static readonly Queue<Patient> screenStation = new();
         private static readonly Queue<Patient> stationOne = new();
         private static readonly Queue<Patient> stationTwo = new();
         private static readonly Queue<Patient> stationThree = new();
-        private static readonly Queue<Patient> stationFour = new();
 
         static void Main(string[] args)
         {
             int screened = (60 / 2) * 8;
             for (int i = 0; i < screened; i++)
             {
-                stationOne.Enqueue(new Patient { Name = RandomString(5) });
-                stationTwo.Enqueue(new Patient { Name = RandomString(5) });
-                stationThree.Enqueue(new Patient { Name = RandomString(5) });
+                screenStation.Enqueue(new Patient { Name = RandomString(5) });
+                
+            }
+            Console.WriteLine($"Total People Screen in 8 hours: {screenStation.Count} after 8 hours");
+
+            int vaccinated = (60 / 12) * 3 * 8;
+            for (int i = 0; i < vaccinated; i++)
+            {
+                screenStation.Dequeue();
 
                 if (i == 20)
                 {
-                    Console.WriteLine($"20th Patient has been reached in {i * 2} minutes");
+                    Console.WriteLine($"The 20th person has been reached in {i * 12 / 3} minutes");
                 }
             }
-            Console.WriteLine($"Total People Screen in all 3 stations: {stationOne.Count + stationTwo.Count + stationThree.Count} after 8 hours");
 
-            int vaccinated = (60 / 12) * 8;
-            for (int i = 0; i < vaccinated; i++)
-            {
-                stationOne.Dequeue();
-                stationTwo.Dequeue();
-                stationThree.Dequeue();
-            }
-
-            Console.WriteLine($"People still left in station One: {stationOne.Count}");
-            Console.WriteLine($"People still left in station Two: {stationTwo.Count}");
-            Console.WriteLine($"People still left in station Three: {stationTwo.Count}");
-            Console.WriteLine($"People still left in total: {stationOne.Count + stationTwo.Count + stationThree.Count} after 8 hours");
-
-
-            Console.WriteLine($"If another station was added { vaccinated } more people would be vaccinated.\nLeaving the total count left to be vaccinated in the queues as {stationOne.Count + stationTwo.Count + stationThree.Count - vaccinated}");
-
+            Console.WriteLine($"Total People Vaccinated in 8 hours: {screenStation.Count}");
+            int extraStation = (60 / 12) * 8;
+            Console.WriteLine($"If another station was added { extraStation } more people would be vaccinated.\nLeaving the total count left to be vaccinated in the queues as {screenStation.Count - extraStation}");
+            Console.WriteLine($"If there was a 4th station the 20th patient would be reached in {20 * 12 / 4} minutes");
         }
 
         public static string RandomString(int length)
